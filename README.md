@@ -22,3 +22,5 @@ DSA-Tool adalah aplikasi berbasis Streamlit untuk mengklasifikasikan teks akadem
 Model BERT telah dilatih khusus untuk klasifikasi multi-label 17 SDG menggunakan dataset akademik.  
 Model tersedia di Hugging Face:  
 👉 [`degolcen/sdg-bert-model`](https://huggingface.co/degolcen/sdg-bert-model)
+
+## Akses Aplikasi: https://dsa-tool.streamlit.app/
