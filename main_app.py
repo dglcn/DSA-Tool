@@ -43,12 +43,16 @@ elif mode == "📄 Upload File CSV":
 
     if uploaded_file:
         try:
-            df = pd.read_csv(uploaded_file, encoding="utf-8")
+            # Coba baca dengan UTF-8, fallback ke Latin1 jika gagal
+            try:
+                df = pd.read_csv(uploaded_file, encoding="utf-8")
+            except UnicodeDecodeError:
+                uploaded_file.seek(0)
+                df = pd.read_csv(uploaded_file, encoding="latin1")
 
             if df.shape[1] < 1:
                 st.error("❌ File harus memiliki minimal 1 kolom.")
             else:
-                # Ambil kolom pertama (bebas namanya)
                 texts = df.iloc[:, 0].fillna("").tolist()
                 results = []
 
