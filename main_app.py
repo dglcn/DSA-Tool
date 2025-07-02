@@ -41,7 +41,7 @@ elif mode == "📄 Upload File CSV":
     uploaded_file = st.file_uploader("📁 Pilih file CSV", type=["csv"])
 
     if uploaded_file:
-        df = pd.read_csv(uploaded_file, encoding="utf-8", errors="ignore")
+        df = pd.read_csv(uploaded_file, encoding="utf-8")
 
         if not {"title", "abstract"}.issubset(df.columns):
             st.error("File harus memiliki kolom 'title' dan 'abstract'.")
