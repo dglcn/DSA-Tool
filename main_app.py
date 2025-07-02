@@ -37,34 +37,35 @@ if mode == "📝 Input Teks Manual":
                 st.write(f"✅ SDG {idx + 1} — Score: {probs[idx]:.2f}")
 
 elif mode == "📄 Upload File CSV":
-    st.subheader("Unggah file CSV (hanya satu kolom teks)")
+    st.subheader("Unggah file CSV (1 kolom teks)")
 
     uploaded_file = st.file_uploader("📁 Pilih file CSV", type=["csv"])
 
     if uploaded_file:
         try:
             df = pd.read_csv(uploaded_file, encoding="utf-8")
-        except UnicodeDecodeError:
-            df = pd.read_csv(uploaded_file, encoding="latin1")
 
-        if df.shape[1] != 1:
-            st.error("File CSV harus hanya memiliki satu kolom teks.")
-        else:
-            col_name = df.columns[0]
-            texts = df[col_name].fillna("").tolist()
-            results = []
+            if df.shape[1] < 1:
+                st.error("❌ File harus memiliki minimal 1 kolom.")
+            else:
+                # Ambil kolom pertama (bebas namanya)
+                texts = df.iloc[:, 0].fillna("").tolist()
+                results = []
 
-            for text in texts:
-                inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
-                with torch.no_grad():
-                    logits = model(**inputs).logits
-                    probs = torch.sigmoid(logits).squeeze().numpy()
-                top_sdgs = np.argsort(probs)[-3:][::-1] + 1
-                results.append(", ".join([f"SDG {i}" for i in top_sdgs]))
+                for text in texts:
+                    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+                    with torch.no_grad():
+                        logits = model(**inputs).logits
+                        probs = torch.sigmoid(logits).squeeze().numpy()
+                    top_sdgs = np.argsort(probs)[-3:][::-1] + 1
+                    results.append(", ".join([f"SDG {i}" for i in top_sdgs]))
 
-            df["predicted_sdgs"] = results
-            st.success("Prediksi selesai! Hasil ditampilkan di bawah:")
-            st.dataframe(df)
+                df["predicted_sdgs"] = results
+                st.success("✅ Prediksi selesai! Hasil ditampilkan di bawah:")
+                st.dataframe(df)
 
-            csv_output = df.to_csv(index=False).encode("utf-8")
-            st.download_button("⬇️ Download Hasil", data=csv_output, file_name="sdg_predictions.csv", mime="text/csv")
+                csv_output = df.to_csv(index=False).encode("utf-8")
+                st.download_button("⬇️ Download Hasil", data=csv_output, file_name="sdg_predictions.csv", mime="text/csv")
+
+        except Exception as e:
+            st.error(f"❌ Gagal membaca file CSV: {e}")
