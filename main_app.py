@@ -37,16 +37,21 @@ if mode == "📝 Input Teks Manual":
                 st.write(f"✅ SDG {idx + 1} — Score: {probs[idx]:.2f}")
 
 elif mode == "📄 Upload File CSV":
-    st.subheader("Unggah file CSV (kolom: title, abstract)")
+    st.subheader("Unggah file CSV (hanya satu kolom teks)")
+
     uploaded_file = st.file_uploader("📁 Pilih file CSV", type=["csv"])
 
     if uploaded_file:
-        df = pd.read_csv(uploaded_file, encoding="latin1")
+        try:
+            df = pd.read_csv(uploaded_file, encoding="utf-8")
+        except UnicodeDecodeError:
+            df = pd.read_csv(uploaded_file, encoding="latin1")
 
-        if not {"title", "abstract"}.issubset(df.columns):
-            st.error("File harus memiliki kolom 'title' dan 'abstract'.")
+        if df.shape[1] != 1:
+            st.error("File CSV harus hanya memiliki satu kolom teks.")
         else:
-            texts = (df["title"].fillna("") + " " + df["abstract"].fillna("")).tolist()
+            col_name = df.columns[0]
+            texts = df[col_name].fillna("").tolist()
             results = []
 
             for text in texts:
@@ -59,7 +64,7 @@ elif mode == "📄 Upload File CSV":
 
             df["predicted_sdgs"] = results
             st.success("Prediksi selesai! Hasil ditampilkan di bawah:")
-            st.dataframe(df[["title", "abstract", "predicted_sdgs"]])
+            st.dataframe(df)
 
             csv_output = df.to_csv(index=False).encode("utf-8")
             st.download_button("⬇️ Download Hasil", data=csv_output, file_name="sdg_predictions.csv", mime="text/csv")
