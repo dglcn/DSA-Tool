@@ -1,14 +1,24 @@
-# 📊 DSA-Tool: SDG Classifier App
+# 🌍 DSA-Tool: Deep SDG Analyzer
 
-Aplikasi klasifikasi otomatis SDG (Sustainable Development Goals) berbasis model BERT yang telah di-fine-tune.
+DSA-Tool adalah aplikasi berbasis Streamlit untuk mengklasifikasikan teks akademik (judul dan abstrak jurnal) ke dalam kategori Tujuan Pembangunan Berkelanjutan (SDGs). Aplikasi ini menggunakan model BERT yang telah di-*fine-tune* untuk multi-label classification berdasarkan data jurnal ilmiah.
 
-Model: [`degolcen/sdg-bert-model`](https://huggingface.co/degolcen/sdg-bert-model)
+---
 
-## 🔧 Fitur Aplikasi
-- Input teks manual: masukkan judul dan/atau abstrak → muncul prediksi SDG
-- Input file CSV: upload file berisi kolom `title` dan `abstract` → dapatkan prediksi SDG dalam bentuk file
+## 🚀 Fitur
 
-## 🚀 Cara Menjalankan Lokal
-1. Install dependensi:
-   ```bash
-   pip install -r requirements.txt
+- ✅ **Input Teks Manual**  
+  Masukkan teks (judul atau abstrak jurnal) dan dapatkan prediksi Top-3 SDG secara instan.
+
+- 📁 **Upload File CSV**  
+  Unggah file CSV berisi kumpulan teks jurnal (satu kolom saja), dan dapatkan hasil prediksi SDG secara batch.
+
+- 📥 **Unduh Hasil Prediksi**  
+  Hasil prediksi dapat diunduh langsung dalam format `.csv` dengan kolom tambahan "predicted_sdgs".
+
+---
+
+## 🧠 Model yang Digunakan
+
+Model BERT telah dilatih khusus untuk klasifikasi multi-label 17 SDG menggunakan dataset akademik.  
+Model tersedia di Hugging Face:  
+👉 [`degolcen/sdg-bert-model`](https://huggingface.co/degolcen/sdg-bert-model)
